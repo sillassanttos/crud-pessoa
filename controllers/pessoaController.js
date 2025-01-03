@@ -22,6 +22,9 @@ class PessoaController {
     res.render('pessoa/incluirPessoa', { errors: [], pessoa: {}, user: req.cookies.nome });
   }
 
+  
+  
+
   async incluirPessoa(req, res) {
 
     // Remove a formatação do CPF antes das validações
@@ -96,7 +99,8 @@ class PessoaController {
         if (pessoa.foto) {
           pessoa.foto = pessoa.foto.replace('uploads', '/uploads'); 
         }
-        res.render('pessoa/editarPessoa', { errors: [], pessoa, user: req.cookies.nome });
+        // Adiciona o objeto req às variáveis passadas para a view:
+        res.render('pessoa/editarPessoa', { errors: [], pessoa, user: req.cookies.nome, req: req });
       }
     });
   }
