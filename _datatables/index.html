@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataTables Responsive Example</title>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
+    <style>
+        td.dtr-control {
+            text-align: center;
+            cursor: pointer;
+        }
+        /* Estilo para a tabela dentro da linha filha */
+        table.dtr-details {
+            width: 100%;
+        }
+        table.dtr-details td,
+        table.dtr-details th {
+            text-align: left;
+            padding: 5px 10px;
+        }
+/* Imagem para o estado fechado (sinal de +) */
+td.dtr-control.closed:before {
+    content: '';
+    display: block;
+    width: 16px;
+    height: 16px;
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAbwAAAG8B8aLcQwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAB5SURBVDiNY/z//z8DJYCJneI/AoHhCjAqPg4E1yYGBto/G4iHw7wAAOs4MubV/yVdAAAAAElFTkSuQmCC");
+    background-repeat: no-repeat;
+    background-position: center center;
+}
+
+/* Imagem para o estado aberto (sinal de -) */
+td.dtr-control.opened:before {
+    content: '';
+    display: block;
+    width: 16px;
+    height: 16px;
+    background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABHNCSVQICAgIfAhkiAAAAAlwSFlzAAAAbwAAAG8B8aLcQwAAABl0RVh0U29mdHdhcmUAd3d3Lmlua3NjYXBlLm9yZ5vuPBoAAAA3SURBVDiNY/z//z8DkUgC8z8BCwAAAAD//02wWfQvBAAAAABJRU5ErkJggg==");
+    background-repeat: no-repeat;
+    background-position: center center;
+}        
+    </style>
+</head>
+<body>
+
+    <table id="myTable" class="display nowrap" width="100%">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Name</th>
+                <th>Position</th>
+                <th>Office</th>
+                <th>Age</th>
+                <th>Start date</th>
+                <th>Salary</th>
+            </tr>
+        </thead>
+    </table>
+
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var table = $('#myTable').DataTable({
+                "data": [
+                    {
+                        "name":       "Airi Satou",
+                        "position":   "Accountant",
+                        "office":     "Tokyo",
+                        "age":        "33",
+                        "start_date": "2008/11/28",
+                        "salary":     "$162,700"
+                    },
+                    {
+                        "name":       "Angelica Ramos",
+                        "position":   "Chief Executive Officer (CEO)",
+                        "office":     "London",
+                        "age":        "47",
+                        "start_date": "2009/10/09",
+                        "salary":     "$1,200,000"
+                    },
+                    {
+                        "name":       "Ashton Cox",
+                        "position":   "Junior Technical Author",
+                        "office":     "San Francisco",
+                        "age":        "66",
+                        "start_date": "2009/01/12",
+                        "salary":     "$86,000"
+                    },
+                    {
+                        "name":       "Bradley Greer",
+                        "position":   "Software Engineer",
+                        "office":     "London",
+                        "age":        "41",
+                        "start_date": "2012/10/13",
+                        "salary":     "$132,000"
+                    },
+                    {
+                        "name":       "Brenden Wagner",
+                        "position":   "Software Engineer",
+                        "office":     "San Francisco",
+                        "age":        "28",
+                        "start_date": "2011/06/07",
+                        "salary":     "$206,850"
+                    },
+                    {
+                        "name":       "Brielle Williamson",
+                        "position":   "Integration Specialist",
+                        "office":     "New York",
+                        "age":        "61",
+                        "start_date": "2012/12/02",
+                        "salary":     "$372,000"
+                    },
+                    {
+                        "name":       "Bruno Nash",
+                        "position":   "Software Engineer",
+                        "office":     "London",
+                        "age":        "38",
+                        "start_date": "2011/05/03",
+                        "salary":     "$163,500"
+                    },
+                    {
+                        "name":       "Caesar Vance",
+                        "position":   "Pre-Sales Support",
+                        "office":     "New York",
+                        "age":        "21",
+                        "start_date": "2011/12/12",
+                        "salary":     "$106,450"
+                    },
+                    {
+                        "name":       "Cara Stevens",
+                        "position":   "Sales Assistant",
+                        "office":     "New York",
+                        "age":        "46",
+                        "start_date": "2011/12/06",
+                        "salary":     "$145,600"
+                    },
+                    {
+                        "name":       "Cedric Kelly",
+                        "position":   "Senior Javascript Developer",
+                        "office":     "Edinburgh",
+                        "age":        "22",
+                        "start_date": "2012/03/29",
+                        "salary":     "$433,060"
+                    }
+                ],
+                "columns": [
+                    {
+                        "className": 'dtr-control',
+                        "orderable": false,
+                        "data": null,
+                        "defaultContent": ''
+                    },
+                    { "data": "name" },
+                    { "data": "position" },
+                    { "data": "office" },
+                    { "data": "age" },
+                    { "data": "start_date" },
+                    { "data": "salary" }
+                ],
+                "order": [[1, 'asc']],
+                "pageLength": 10,
+                "responsive": {
+                    details: {
+                        type: 'column',
+                        target: 'td.dtr-control', // Faz a primeira coluna ser o controle
+                        renderer: function (api, rowIdx, columns) {
+                            var data = $.map(columns, function (col, i) {
+                                return col.hidden ?
+                                    '<tr data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">' +
+                                    '<td>' + col.title + ':' + '</td> ' +
+                                    '<td>' + col.data + '</td>' +
+                                    '</tr>' :
+                                    '';
+                            }).join('');
+                            return data ?
+                                $('<table/>').append(data) :
+                                false;
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>
