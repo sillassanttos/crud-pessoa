@@ -3,17 +3,21 @@ const { body, validationResult } = require('express-validator');
 const fs = require('fs');
 
 class PessoaController {
+  
   async listarPessoas(req, res) {
-    const filtros = {
-      cpf: req.query.cpf,
-      nome: req.query.nome
-    };
-
+    const filtro = req.query.filtro;
+  
+    const filtros = {};
+  
+    if (filtro) {
+      filtros.filtro = filtro;
+    }
+  
     PessoaModel.listarPessoas(filtros, (erro, resultados) => {
       if (erro) {
-        res.status(500).render('error/erro', { error: 'Erro ao listar pessoas', details: erro.message, user: req.cookies.nome });
+        res.status(500).render('error/erro', { error: 'Erro ao listar pessoas', details: erro.message, user: req.cookies.nome, req: req });
       } else {
-        res.render('pessoa/pesquisarPessoa', { pessoas: resultados, filtros: filtros, user: req.cookies.nome, req: req });
+        res.render('pessoa/pesquisarPessoa', { pessoas: resultados, filtros, user: req.cookies.nome, req: req });
       }
     });
   }

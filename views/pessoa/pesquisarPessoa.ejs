@@ -7,13 +7,9 @@
 
     <form action="/pessoa/pesquisar" method="GET">
         <div class="form-row">
-            <div class="col-md-5 mb-3">
-                <input type="text" class="form-control" id="cpf" name="cpf" placeholder="Filtrar por CPF"
-                    value="<%= filtros.cpf ? filtros.cpf : '' %>">
-            </div>
-            <div class="col-md-5 mb-3">
-                <input type="text" class="form-control" id="nome" name="nome" placeholder="Filtrar por Nome"
-                    value="<%= filtros.nome ? filtros.nome : '' %>">
+            <div class="col-md-10 mb-3">
+                <input type="text" class="form-control" id="filtro" name="filtro" placeholder="Pesquisar por CPF ou Nome"
+                    value="<%= filtros.filtro ? filtros.filtro : '' %>">
             </div>
             <div class="col-md-2 mb-3">
                 <button type="submit" class="btn btn-primary btn-block">

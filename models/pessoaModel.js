@@ -2,7 +2,8 @@ const conexao = require('../data/conexao');
 const { v4: uuidv4 } = require('uuid');
 
 class PessoaModel {
-  listarPessoas(filtros, callback) {
+
+listarPessoas(filtros, callback) {
     let sql = `SELECT 
                   id,
                   cpf,
@@ -18,14 +19,10 @@ class PessoaModel {
 
     const params = [];
 
-    if (filtros.cpf) {
-      sql += ' AND cpf = ?';
-      params.push(filtros.cpf);
-    }
-
-    if (filtros.nome) {
-      sql += ' AND nome LIKE ?';
-      params.push(`%${filtros.nome}%`);
+    if (filtros.filtro) {
+      sql += ' AND (cpf = ? OR nome LIKE ?)';
+      params.push(filtros.filtro);
+      params.push(`%${filtros.filtro}%`);
     }
 
     sql += ' ORDER BY nome';
@@ -37,7 +34,7 @@ class PessoaModel {
         callback(null, resultados);
       }
     });
-  }
+}
 
   buscarPessoaPorId(id, callback) {
     const sql = `SELECT 
