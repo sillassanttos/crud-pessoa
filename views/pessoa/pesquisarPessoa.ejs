@@ -1,159 +1,161 @@
 <%- include('../partials/header', { title: 'Pesquisar Pessoa' }) %>
 
-<div class="container mt-4">
-    <h1 class="display-4 text-center mb-4">
-        <i class="fas fa-search"></i> Pesquisar Pessoa
-    </h1>
+<div class="content"> <div class="container mt-4">
+        <h1 class="display-4 text-center mb-4">
+            <i class="fas fa-search"></i> Pesquisar Pessoa
+        </h1>
 
-    <form action="/pessoa/pesquisar" method="GET">
-        <div class="form-row align-items-center">
-            <div class="col mb-3">
-                <input type="text" class="form-control" id="filtro" name="filtro" placeholder="Pesquisar por CPF ou Nome"
-                    value="<%= filtros.filtro ? filtros.filtro : '' %>">
+        <form action="/pessoa/pesquisar" method="GET">
+            <div class="form-row align-items-center">
+                <div class="col mb-3">
+                    <input type="text" class="form-control" id="filtro" name="filtro"
+                        placeholder="Pesquisar por CPF ou Nome" value="<%= filtros.filtro ? filtros.filtro : '' %>">
+                </div>
+                <div class="col-auto mb-3">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-search"></i> Pesquisar
+                    </button>
+                </div>
             </div>
-            <div class="col-auto mb-3">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fas fa-search"></i> Pesquisar
-                </button>
-            </div>
-        </div>
-    </form>
+        </form>
 
-    <div class="table-responsive">
-        <table class="table table-striped table-hover">
-            <thead>
-                <tr>
-                    <th scope="col" data-column="cpf" style="cursor: pointer;">CPF <i class="fas fa-sort"></i></th>
-                    <th scope="col" data-column="nome" style="cursor: pointer;">Nome <i class="fas fa-sort"></i></th>
-                    <th scope="col">Situação</th>
-                    <th scope="col">Data de Nascimento</th>
-                    <th scope="col">Idade</th>
-                    <th scope="col">Ações</th>
-                </tr>
-            </thead>
-            <tbody>
-                <% pessoas.forEach(pessoa => { %>
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
                     <tr>
-                        <td>
-                            <%= pessoa.cpf %>
-                        </td>
-                        <td>
-                            <%= pessoa.nome %>
-                        </td>
-                        <td>
-                            <%= pessoa.situacao %>
-                        </td>
-                        <td>
-                            <%= pessoa.data_nascimento %>
-                        </td>
-                        <td>
-                            <%= pessoa.idade %>
-                        </td>
-                        <td>
-                            <a href="/pessoa/editar/<%= pessoa.id %>" class="btn btn-sm btn-warning" title="Editar">
-                                <i class="fas fa-edit"></i>
-                            </a>
-                            <button class="btn btn-sm btn-danger btn-excluir" title="Excluir" data-id="<%= pessoa.id %>">
-                                <i class="fas fa-trash-alt"></i>
-                            </button>
-                        </td>
+                        <th scope="col" data-column="cpf" style="cursor: pointer;">CPF <i class="fas fa-sort"></i>
+                        </th>
+                        <th scope="col" data-column="nome" style="cursor: pointer;">Nome <i class="fas fa-sort"></i>
+                        </th>
+                        <th scope="col">Situação</th>
+                        <th scope="col">Data de Nascimento</th>
+                        <th scope="col">Idade</th>
+                        <th scope="col">Ações</th>
                     </tr>
-                    <% }); %>
-            </tbody>
-        </table>
-    </div>
-
-    <% if (req.query.mensagem) { %>
-        <div class="alert alert-success mt-4">
-            <%= req.query.mensagem %>
+                </thead>
+                <tbody>
+                    <% pessoas.forEach(pessoa => { %>
+                        <tr>
+                            <td>
+                                <%= pessoa.cpf %>
+                            </td>
+                            <td>
+                                <%= pessoa.nome %>
+                            </td>
+                            <td>
+                                <%= pessoa.situacao %>
+                            </td>
+                            <td>
+                                <%= pessoa.data_nascimento %>
+                            </td>
+                            <td>
+                                <%= pessoa.idade %>
+                            </td>
+                            <td>
+                                <a href="/pessoa/editar/<%= pessoa.id %>" class="btn btn-sm btn-warning" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </a>
+                                <button class="btn btn-sm btn-danger btn-excluir" title="Excluir"
+                                    data-id="<%= pessoa.id %>">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <% }); %>
+                </tbody>
+            </table>
         </div>
-    <% } %>
 
-    <a href="/pessoa/incluir" class="btn btn-success mt-3">
-        <i class="fas fa-user-plus"></i> Incluir Pessoa
-    </a>
-</div>
+        <% if (req.query.mensagem) { %>
+            <div class="alert alert-success mt-4">
+                <%= req.query.mensagem %>
+            </div>
+            <% } %>
 
-<%- include('../partials/footer') %>
+        <a href="/pessoa/incluir" class="btn btn-success mt-3">
+            <i class="fas fa-user-plus"></i> Incluir Pessoa
+        </a>
+    </div>
+</div> <%- include('../partials/footer') %>
 
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const tableHeaders = document.querySelectorAll('thead th[data-column]');
-        let currentSortColumn = null;
-        let isAscending = true;
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tableHeaders = document.querySelectorAll('thead th[data-column]');
+            let currentSortColumn = null;
+            let isAscending = true;
 
-        tableHeaders.forEach(header => {
-            header.addEventListener('click', function () {
-                const column = this.dataset.column;
-                if (currentSortColumn === column) {
-                    isAscending = !isAscending;
-                } else {
-                    currentSortColumn = column;
-                    isAscending = true;
-                }
-
-                sortTable(column, isAscending);
-                updateSortIcons();
-            });
-        });
-
-        function sortTable(column, isAscending) {
-            const tbody = document.querySelector('tbody');
-            const rows = Array.from(tbody.querySelectorAll('tr'));
-
-            rows.sort((a, b) => {
-                const aValue = a.querySelector(`td:nth-child(${getColumnIndex(column)})`).textContent.trim();
-                const bValue = b.querySelector(`td:nth-child(${getColumnIndex(column)})`).textContent.trim();
-
-                if (!isNaN(aValue) && !isNaN(bValue)) {
-                    return isAscending ? aValue - bValue : bValue - aValue;
-                } else {
-                    return isAscending ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
-                }
-            });
-
-            rows.forEach(row => tbody.appendChild(row));
-        }
-
-        function getColumnIndex(column) {
-            const headers = Array.from(document.querySelectorAll('thead th'));
-            return headers.findIndex(header => header.dataset.column === column) + 1;
-        }
-
-        function updateSortIcons() {
             tableHeaders.forEach(header => {
-                const icon = header.querySelector('i');
-                icon.classList.remove('fa-sort', 'fa-sort-up', 'fa-sort-down');
-
-                if (header.dataset.column === currentSortColumn) {
-                    icon.classList.add(isAscending ? 'fa-sort-up' : 'fa-sort-down');
-                } else {
-                    icon.classList.add('fa-sort');
-                }
-            });
-        }
-
-        // Script para a confirmação de exclusão com SweetAlert2
-        const botoesExcluir = document.querySelectorAll('.btn-excluir');
-        botoesExcluir.forEach(botao => {
-            botao.addEventListener('click', () => {
-                const pessoaId = botao.dataset.id;
-
-                Swal.fire({
-                    title: 'Tem certeza?',
-                    text: "Você não poderá reverter isso!",
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#3085d6',
-                    cancelButtonColor: '#d33',
-                    confirmButtonText: 'Sim, excluir!',
-                    cancelButtonText: 'Cancelar'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = `/pessoa/excluir/${pessoaId}`;
+                header.addEventListener('click', function () {
+                    const column = this.dataset.column;
+                    if (currentSortColumn === column) {
+                        isAscending = !isAscending;
+                    } else {
+                        currentSortColumn = column;
+                        isAscending = true;
                     }
+
+                    sortTable(column, isAscending);
+                    updateSortIcons();
+                });
+            });
+
+            function sortTable(column, isAscending) {
+                const tbody = document.querySelector('tbody');
+                const rows = Array.from(tbody.querySelectorAll('tr'));
+
+                rows.sort((a, b) => {
+                    const aValue = a.querySelector(`td:nth-child(${getColumnIndex(column)})`).textContent.trim();
+                    const bValue = b.querySelector(`td:nth-child(${getColumnIndex(column)})`).textContent.trim();
+
+                    if (!isNaN(aValue) && !isNaN(bValue)) {
+                        return isAscending ? aValue - bValue : bValue - aValue;
+                    } else {
+                        return isAscending ? aValue.localeCompare(bValue) : bValue.localeCompare(aValue);
+                    }
+                });
+
+                rows.forEach(row => tbody.appendChild(row));
+            }
+
+            function getColumnIndex(column) {
+                const headers = Array.from(document.querySelectorAll('thead th'));
+                return headers.findIndex(header => header.dataset.column === column) + 1;
+            }
+
+            function updateSortIcons() {
+                tableHeaders.forEach(header => {
+                    const icon = header.querySelector('i');
+                    icon.classList.remove('fa-sort', 'fa-sort-up', 'fa-sort-down');
+
+                    if (header.dataset.column === currentSortColumn) {
+                        icon.classList.add(isAscending ? 'fa-sort-up' : 'fa-sort-down');
+                    } else {
+                        icon.classList.add('fa-sort');
+                    }
+                });
+            }
+
+            // Script para a confirmação de exclusão com SweetAlert2
+            const botoesExcluir = document.querySelectorAll('.btn-excluir');
+            botoesExcluir.forEach(botao => {
+                botao.addEventListener('click', () => {
+                    const pessoaId = botao.dataset.id;
+
+                    Swal.fire({
+                        title: 'Tem certeza?',
+                        text: "Você não poderá reverter isso!",
+                        icon: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Sim, excluir!',
+                        cancelButtonText: 'Cancelar'
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            window.location.href = `/pessoa/excluir/${pessoaId}`;
+                        }
+                    });
                 });
             });
         });
-    });
-</script>
+    </script>
