@@ -1,0 +1,99 @@
+<footer class="container-fluid">
+    <div class="grid">
+        <div>
+            <p><strong>Sistema de Cadastro de Pessoas</strong></p>
+            <p>
+                <small>
+                    Desenvolvido com tecnologias modernas para garantir a melhor experiência
+                </small>
+            </p>
+        </div>
+        <div class="text-center">
+            <p>
+                <small>
+                    <a href="/dashboard" class="secondary">Início</a> |
+                    <a href="/pessoa/listar" class="secondary">Pesquisar</a> |
+                    <a href="/pessoa/incluir" class="secondary">Incluir</a>
+                </small>
+            </p>
+        </div>
+        <div class="text-right">
+            <p>
+                <small>Versão 1.0.0</small>
+            </p>
+            <p>
+                <small>&copy; <span id="anoAtual"></span> - Todos os direitos reservados</small>
+            </p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('anoAtual').textContent = new Date().getFullYear();
+    });
+
+    window.addEventListener('scroll', function() {
+        const footer = document.querySelector('footer');
+        const body = document.body;
+        const html = document.documentElement;
+        
+        const height = Math.max(
+            body.scrollHeight,
+            body.offsetHeight,
+            html.clientHeight,
+            html.scrollHeight,
+            html.offsetHeight
+        );
+        
+        if (height > window.innerHeight) {
+            footer.classList.remove('fixed-bottom');
+        } else {
+            footer.classList.add('fixed-bottom');
+        }
+    });
+</script>
+
+<style>
+    footer {
+        padding: 1rem 0;
+        margin-top: 2rem;
+        background-color: var(--card-background-color);
+        border-top: 1px solid var(--card-border-color);
+    }
+
+    footer.fixed-bottom {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        z-index: 1000;
+    }
+
+    footer a {
+        text-decoration: none;
+        color: var(--secondary);
+    }
+
+    footer a:hover {
+        text-decoration: underline;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    .text-right {
+        text-align: right;
+    }
+
+    @media (max-width: 768px) {
+        .text-right,
+        .text-center {
+            text-align: center;
+        }
+        
+        footer .grid > div {
+            margin-bottom: 1rem;
+        }
+    }
+</style>

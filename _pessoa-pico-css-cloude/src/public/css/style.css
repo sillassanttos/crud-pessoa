@@ -1,0 +1,211 @@
+/* Variáveis personalizadas */
+:root {
+  --border-radius: 8px;
+  --transition-duration: 0.2s;
+  --hover-brightness: 0.95;
+}
+
+/* Estilos gerais */
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main {
+  flex: 1 0 auto;
+  padding: 2rem 0;
+}
+
+/* Navegação */
+nav {
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--card-border-color);
+  background-color: var(--card-background-color);
+}
+
+nav a {
+  text-decoration: none;
+  transition: opacity var(--transition-duration) ease-in-out;
+}
+
+nav a:hover {
+  opacity: 0.8;
+}
+
+/* Tabelas */
+table {
+  margin: 1rem 0;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table th, 
+table td {
+  padding: 0.75rem;
+  text-align: left;
+  vertical-align: middle;
+}
+
+table thead th {
+  background-color: var(--card-background-color);
+  font-weight: 600;
+}
+
+table tbody tr:nth-child(even) {
+  background-color: var(--card-background-color);
+}
+
+/* Formulários */
+form {
+  margin: 1rem 0;
+}
+
+input, 
+select, 
+textarea {
+  transition: border-color var(--transition-duration) ease-in-out;
+}
+
+input:focus, 
+select:focus, 
+textarea:focus {
+  border-color: var(--primary);
+}
+
+/* Botões */
+button, 
+[role="button"] {
+  transition: filter var(--transition-duration) ease-in-out;
+}
+
+button:hover, 
+[role="button"]:hover {
+  filter: brightness(var(--hover-brightness));
+}
+
+.button-group {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+/* Cards */
+article {
+  padding: 1.5rem;
+  margin: 1rem 0;
+  background-color: var(--card-background-color);
+  border: 1px solid var(--card-border-color);
+  border-radius: var(--border-radius);
+}
+
+/* Utilitários */
+.text-center {
+  text-align: center;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.mt-2 {
+  margin-top: 2rem;
+}
+
+.mb-2 {
+  margin-bottom: 2rem;
+}
+
+.flex {
+  display: flex;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.gap-2 {
+  gap: 0.5rem;
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .container {
+      padding: 0 1rem;
+  }
+
+  .grid {
+      grid-template-columns: 1fr;
+  }
+
+  .button-group {
+      flex-direction: column;
+      width: 100%;
+  }
+
+  .button-group button,
+  .button-group [role="button"] {
+      width: 100%;
+      margin: 0.25rem 0;
+  }
+
+  table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+  }
+}
+
+/* Animações */
+@keyframes fadeIn {
+  from {
+      opacity: 0;
+      transform: translateY(-10px);
+  }
+  to {
+      opacity: 1;
+      transform: translateY(0);
+  }
+}
+
+.fade-in {
+  animation: fadeIn var(--transition-duration) ease-in-out;
+}
+
+/* Acessibilidade */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+[role="alert"] {
+  color: var(--form-element-invalid-color);
+}
+
+/* Impressão */
+@media print {
+  nav,
+  footer,
+  .no-print {
+      display: none;
+  }
+
+  body {
+      padding: 0;
+      margin: 0;
+  }
+
+  table {
+      page-break-inside: avoid;
+  }
+}

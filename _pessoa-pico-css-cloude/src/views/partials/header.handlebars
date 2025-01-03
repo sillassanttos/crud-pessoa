@@ -1,0 +1,47 @@
+<nav class="container-fluid">
+  <ul>
+    <li>
+      <a href="/dashboard" class="contrast" onclick="event.preventDefault(); window.location.href='/dashboard';">
+        <strong>Sistema de Cadastro de Pessoas</strong>
+      </a>
+    </li>
+  </ul>
+  <ul>
+    <li>
+      <details role="list" dir="rtl">
+        <summary aria-haspopup="listbox" role="button" class="secondary">
+          Pessoa
+        </summary>
+        <ul role="listbox">
+          <li><a href="/pessoa/listar" class="contrast">Pesquisar</a></li>
+          <li><a href="/pessoa/incluir" class="contrast">Incluir</a></li>
+        </ul>
+      </details>
+    </li>
+  </ul>
+</nav>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const currentPath = window.location.pathname;
+    const menuLinks = document.querySelectorAll('nav a');
+
+    menuLinks.forEach(link => {
+      if (currentPath === link.getAttribute('href')) {
+        link.setAttribute('aria-current', 'page');
+      }
+    });
+
+    const details = document.querySelector('details');
+    details.addEventListener('toggle', function() {
+      if (details.hasAttribute('open')) {
+        document.addEventListener('click', function closeMenu(event) {
+          if (!details.contains(event.target)) {
+            details.removeAttribute('open');
+            document.removeEventListener('click', closeMenu);
+          }
+        });
+      }
+    });
+  });
+</script>

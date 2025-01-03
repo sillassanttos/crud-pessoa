@@ -1,0 +1,206 @@
+<div class="container">
+    {{> header}}
+    
+    <article>
+        <header>
+            <nav aria-label="breadcrumb">
+                <ul>
+                    <li><a href="/dashboard">Início</a></li>
+                    <li><a href="/pessoa/listar">Pessoas</a></li>
+                    <li>Incluir Nova Pessoa</li>
+                </ul>
+            </nav>
+            <h2>Incluir Nova Pessoa</h2>
+        </header>
+
+        <form id="formPessoa" action="/pessoa/incluir" method="POST" autocomplete="off">
+    {{#if erros}}
+        <div class="error-messages">
+            {{#each erros}}
+                <div class="error">{{this.msg}}</div>
+            {{/each}}
+        </div>
+    {{/if}}        
+            <div class="grid">
+                <div>
+                    <label for="nome">
+                        Nome Completo
+                        <input 
+                            type="text" 
+                            id="nome" 
+                            name="nome" 
+                            required 
+                            minlength="3" 
+                            maxlength="60"
+                            placeholder="Digite o nome completo"
+                            value="{{pessoa.nome}}"
+                        >
+                    </label>
+                </div>
+                
+                <div>
+                    <label for="cpf">
+                        CPF
+                        <input 
+                            type="text" 
+                            id="cpf" 
+                            name="cpf" 
+                            required
+                            placeholder="Digite o CPF"
+                            value="{{pessoa.cpf}}"
+                        >
+                    </label>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div>
+                    <label for="data_nascimento">
+                        Data de Nascimento
+                        <input 
+                            type="date" 
+                            id="data_nascimento" 
+                            name="data_nascimento" 
+                            required
+                            max="{{dataAtual}}"
+                            value="{{pessoa.data_nascimento}}"
+                        >
+                    </label>
+                </div>
+                
+                <div>
+                    <label for="situacao">
+                        Situação
+                        <select id="situacao" name="situacao" required>
+                            <option value="">Selecione...</option>
+                            <option value="A" {{#if (equals pessoa.situacao "A")}}selected{{/if}}>Ativo</option>
+                            <option value="I" {{#if (equals pessoa.situacao "I")}}selected{{/if}}>Inativo</option>
+                        </select>
+                    </label>
+                </div>
+            </div>
+
+            <div class="grid">
+                <div>
+                    <button type="submit" class="contrast">Salvar</button>
+                    <a href="/pessoa/listar" role="button" class="outline">Cancelar</a>
+                </div>
+            </div>
+        </form>
+<style>
+    .error-messages {
+        background-color: var(--form-element-invalid-active-border-color);
+        color: white;
+        padding: 1rem;
+        border-radius: var(--border-radius);
+        margin-bottom: 1rem;
+    }
+    .error {
+        margin: 0.25rem 0;
+    }
+</style>        
+    </article>
+
+    {{> footer}}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('formPessoa');
+        const cpfInput = document.getElementById('cpf');
+        
+        // Aplicar máscara ao CPF
+        $(cpfInput).mask('000.000.000-00', {
+            reverse: true,
+            clearIfNotMatch: true
+        });
+
+        // Validação do formulário
+        form.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const cpf = cpfInput.value.replace(/\D/g, '');
+            if (cpf.length !== 11) {
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'CPF inválido',
+                    text: 'Por favor, digite um CPF válido com 11 dígitos.'
+                });
+                cpfInput.focus();
+                return;
+            }
+
+            // Verificar CPF duplicado
+            try {
+                const response = await fetch(`/pessoa/verificar-cpf?cpf=${cpf}`);
+                const data = await response.json();
+                
+                if (data.existe) {
+                    await Swal.fire({
+                        icon: 'error',
+                        title: 'CPF já cadastrado',
+                        text: 'Este CPF já está cadastrado no sistema.'
+                    });
+                    cpfInput.focus();
+                    return;
+                }
+                
+                form.submit();
+            } catch (erro) {
+                await Swal.fire({
+                    icon: 'error',
+                    title: 'Erro na validação',
+                    text: 'Ocorreu um erro ao validar o CPF. Tente novamente.'
+                });
+            }
+        });
+
+        // Validação da data de nascimento
+        const dataInput = document.getElementById('data_nascimento');
+        dataInput.addEventListener('change', function() {
+            const dataEscolhida = new Date(this.value);
+            const hoje = new Date();
+            
+            if (dataEscolhida > hoje) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Data inválida',
+                    text: 'A data de nascimento não pode ser futura.'
+                });
+                this.value = '';
+            }
+        });
+    });
+</script>
+
+<style>
+    form {
+        margin-top: 2rem;
+    }
+
+    .grid {
+        margin-bottom: 1rem;
+    }
+
+    button, [role="button"] {
+        margin-right: 0.5rem;
+    }
+
+    nav[aria-label="breadcrumb"] ul {
+        padding: 0;
+        margin: 0;
+        list-style: none;
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    nav[aria-label="breadcrumb"] ul li:not(:last-child):after {
+        content: "/";
+        margin-left: 0.5rem;
+        color: var(--muted-color);
+    }
+
+    nav[aria-label="breadcrumb"] ul li:last-child {
+        color: var(--muted-color);
+    }
+</style>

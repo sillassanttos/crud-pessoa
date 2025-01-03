@@ -1,0 +1,64 @@
+<nav class="container-fluid">
+  <ul>
+    <li><strong>Sistema de Cadastro de Pessoas</strong></li>
+  </ul>
+  <ul>
+    <li>
+      <details role="list">
+        <summary aria-haspopup="listbox" role="button">Pessoa</summary>
+        <ul role="listbox">
+          <li><a href="/pessoa/listar">Pesquisar</a></li>
+          <li><a href="/pessoa/incluir">Incluir</a></li>
+        </ul>
+      </details>
+    </li>
+  </ul>
+</nav>
+
+<main class="container">
+  <article>
+    <header>
+      <h1>Bem-vindo ao Sistema de Cadastro de Pessoas</h1>
+    </header>
+    <p>Selecione uma opção no menu acima para começar:</p>
+    <div class="grid">
+      <div>
+        <article>
+          <header>
+            <h3>Pesquisar Pessoas</h3>
+          </header>
+          <p>Busque, visualize e gerencie os cadastros existentes.</p>
+          <footer>
+            <a href="/pessoa/listar" role="button" class="outline">Acessar</a>
+          </footer>
+        </article>
+      </div>
+      <div>
+        <article>
+          <header>
+            <h3>Incluir Nova Pessoa</h3>
+          </header>
+          <p>Cadastre uma nova pessoa no sistema.</p>
+          <footer>
+            <a href="/pessoa/incluir" role="button" class="outline">Acessar</a>
+          </footer>
+        </article>
+      </div>
+    </div>
+  </article>
+</main>
+
+<footer class="container-fluid">
+  <small>
+    <p>Sistema de Cadastro de Pessoas - Versão 1.0</p>
+    <p>&copy; {{currentYear}} - Todos os direitos reservados</p>
+  </small>
+</footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Adiciona o ano atual ao footer
+    document.querySelector('footer small p:last-child').innerHTML = 
+      document.querySelector('footer small p:last-child').innerHTML.replace('{{currentYear}}', new Date().getFullYear());
+  });
+</script>

@@ -1,0 +1,142 @@
+<div class="container">
+    {{> header}}
+    
+    <article>
+        <header>
+            <h2>Pesquisa de Pessoas</h2>
+        </header>
+
+        <form id="formPesquisa" method="GET" action="/pessoa/listar">
+            <div class="grid">
+                <div class="input-group">
+                    <input 
+                        type="search" 
+                        id="filtro" 
+                        name="filtro" 
+                        placeholder="Digite o nome ou CPF para pesquisar..." 
+                        value="{{filtro}}"
+                        aria-label="Campo de pesquisa">
+                    <button type="submit" class="contrast">Pesquisar</button>
+                </div>
+            </div>
+        </form>
+
+        <div class="overflow-auto">
+            <table role="grid">
+                <thead>
+                    <tr>
+                        <th scope="col">Nome</th>
+                        <th scope="col">CPF</th>
+                        <th scope="col">Data Nascimento</th>
+                        <th scope="col">Situação</th>
+                        <th scope="col" class="text-center">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#if pessoas.length}}
+                        {{#each pessoas}}
+                            <tr>
+                                <td>{{nome}}</td>
+                                <td>{{formatarCPF cpf}}</td>
+                                <td>{{formatarData data_nascimento}}</td>
+                                <td>{{formatarSituacao situacao}}</td>
+                                <td class="text-center">
+                                    <div class="grid">
+                                        <a href="/pessoa/alterar/{{id}}" 
+                                           role="button" 
+                                           class="outline contrast"
+                                           data-tooltip="Alterar">
+                                            Alterar
+                                        </a>
+                                        <button class="outline contrast" 
+                                                onclick="confirmarExclusao('{{id}}')"
+                                                data-tooltip="Excluir">
+                                            Excluir
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        {{/each}}
+                    {{else}}
+                        <tr>
+                            <td colspan="5" class="text-center">
+                                Nenhum registro encontrado.
+                            </td>
+                        </tr>
+                    {{/if}}
+                </tbody>
+            </table>
+        </div>
+    </article>
+
+    {{> footer}}
+</div>
+
+<style>
+    .input-group {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .input-group input {
+        flex: 1;
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    table {
+        margin-top: 2rem;
+    }
+
+    td .grid {
+        display: flex;
+        gap: 0.5rem;
+        justify-content: center;
+        margin: 0;
+    }
+
+    td .grid a,
+    td .grid button {
+        margin: 0;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+
+    .overflow-auto {
+        overflow-x: auto;
+        margin-bottom: 1rem;
+    }
+
+    @media (max-width: 768px) {
+        td .grid {
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('formPesquisa');
+        const input = document.getElementById('filtro');
+
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                form.submit();
+            }
+        });
+
+        if (input.value) {
+            const resultCount = document.querySelectorAll('table tbody tr').length;
+            if (resultCount > 0) {
+                Toast.fire({
+                    icon: 'info',
+                    title: `${resultCount} registro(s) encontrado(s)`
+                });
+            }
+        }
+    });
+</script>

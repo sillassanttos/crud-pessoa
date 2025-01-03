@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Cadastro de Pessoas</title>
+    
+    <!-- Pico CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-material-ui@5/material-ui.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    
+    <!-- Estilo personalizado -->
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    {{#if mensagem}}
+    <script>
+        Swal.fire({
+            title: 'Sucesso!',
+            text: '{{{mensagem}}}',
+            icon: 'success',
+            confirmButtonText: 'OK'
+        });
+    </script>
+    {{/if}}
+
+    {{#if erro}}
+    <script>
+        Swal.fire({
+            title: 'Erro!',
+            text: '{{{erro}}}',
+            icon: 'error',
+            confirmButtonText: 'OK'
+        });
+    </script>
+    {{/if}}
+
+    {{{body}}}
+
+    <!-- jQuery Mask Plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    
+    <!-- JavaScript personalizado -->
+    <script src="/js/main.js"></script>
+
+    <script>
+        // Função para confirmação de exclusão
+        function confirmarExclusao(id) {
+            Swal.fire({
+                title: 'Confirmar exclusão?',
+                text: 'Esta ação não poderá ser revertida!',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Sim, excluir!',
+                cancelButtonText: 'Cancelar'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    excluirPessoa(id);
+                }
+            });
+        }
+
+        // Função para excluir pessoa
+        function excluirPessoa(id) {
+            $.ajax({
+                url: `/pessoa/excluir/${id}`,
+                method: 'DELETE',
+                success: function(response) {
+                    if (response.sucesso) {
+                        Toast.fire({
+                            icon: 'success',
+                            title: response.mensagem
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        Toast.fire({
+                            icon: 'error',
+                            title: response.mensagem
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    Toast.fire({
+                        icon: 'error',
+                        title: 'Erro ao excluir registro'
+                    });
+                }
+            });
+        }
+    </script>
+</body>
+</html>
