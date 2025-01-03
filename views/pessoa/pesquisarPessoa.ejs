@@ -6,13 +6,13 @@
     </h1>
 
     <form action="/pessoa/pesquisar" method="GET">
-        <div class="form-row">
-            <div class="col-md-10 mb-3">
+        <div class="form-row align-items-center">
+            <div class="col mb-3">
                 <input type="text" class="form-control" id="filtro" name="filtro" placeholder="Pesquisar por CPF ou Nome"
                     value="<%= filtros.filtro ? filtros.filtro : '' %>">
             </div>
-            <div class="col-md-2 mb-3">
-                <button type="submit" class="btn btn-primary btn-block">
+            <div class="col-auto mb-3">
+                <button type="submit" class="btn btn-primary">
                     <i class="fas fa-search"></i> Pesquisar
                 </button>
             </div>
@@ -26,8 +26,7 @@
                     <th scope="col" data-column="cpf" style="cursor: pointer;">CPF <i class="fas fa-sort"></i></th>
                     <th scope="col" data-column="nome" style="cursor: pointer;">Nome <i class="fas fa-sort"></i></th>
                     <th scope="col">Situação</th>
-                    <th scope="col">Data de Nascimento</th>
-                    <th scope="col">Ações</th>
+                    <th scope="col">Idade</th> <th scope="col">Ações</th>
                 </tr>
             </thead>
             <tbody>
@@ -42,8 +41,9 @@
                         <td>
                             <%= pessoa.situacao %>
                         </td>
+                        
                         <td>
-                            <%= pessoa.data_nascimento %>
+                            <%= pessoa.idade %>
                         </td>
                         <td>
                             <a href="/pessoa/editar/<%= pessoa.id %>" class="btn btn-sm btn-warning" title="Editar">

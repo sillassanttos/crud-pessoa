@@ -3,19 +3,20 @@ const { v4: uuidv4 } = require('uuid');
 
 class PessoaModel {
 
-listarPessoas(filtros, callback) {
+  listarPessoas(filtros, callback) {
     let sql = `SELECT 
-                  id,
-                  cpf,
-                  nome,
-                  CASE situacao
-                    WHEN 'A' THEN 'Ativo'
-                    WHEN 'I' THEN 'Inativo'
-                  END AS situacao,
-                  DATE_FORMAT(data_nascimento, '%d/%m/%Y') AS data_nascimento,
-                  foto
-                FROM pessoas
-                WHERE 1=1`;
+        id,
+        cpf,
+        nome,
+        CASE situacao
+        WHEN 'A' THEN 'Ativo'
+        WHEN 'I' THEN 'Inativo'
+        END AS situacao,
+        DATE_FORMAT(data_nascimento, '%d/%m/%Y') AS data_nascimento,
+        foto,
+        TIMESTAMPDIFF(YEAR, data_nascimento, CURDATE()) AS idade
+    FROM pessoas
+    WHERE 1=1`;
 
     const params = [];
 
@@ -34,7 +35,7 @@ listarPessoas(filtros, callback) {
         callback(null, resultados);
       }
     });
-}
+  }
 
   buscarPessoaPorId(id, callback) {
     const sql = `SELECT 
