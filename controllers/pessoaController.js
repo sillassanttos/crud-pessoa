@@ -13,7 +13,7 @@ class PessoaController {
       if (erro) {
         res.status(500).render('error/erro', { error: 'Erro ao listar pessoas', details: erro.message, user: req.cookies.nome });
       } else {
-        res.render('pessoa/pesquisarPessoa', { pessoas: resultados, filtros: filtros, user: req.cookies.nome });
+        res.render('pessoa/pesquisarPessoa', { pessoas: resultados, filtros: filtros, user: req.cookies.nome, req: req });
       }
     });
   }
