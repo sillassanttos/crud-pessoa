@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const PessoasControlador = require('../controladores/pessoasControlador');
 const { body } = require('express-validator');
+const Pessoa = require('../modelos/pessoa');
 
 // Middleware para tratar erros nas rotas
 function tratarErros(handler) {

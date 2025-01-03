@@ -1,11 +1,22 @@
 const Pessoa = require('../modelos/pessoa');
 const { validationResult } = require('express-validator');
 
+// Função auxiliar para formatar a data
+function formatarData(data) {
+    return new Date(data).toLocaleDateString('pt-BR');
+}
+
 const PessoasControlador = {
+
     async listar(req, res) {
         try {
             const pessoas = await Pessoa.listarTodas();
-            res.render('pessoas/listagem', { pessoas });
+
+            pessoas.forEach(pessoa => {
+                pessoa.data_nascimento = formatarData(pessoa.data_nascimento);
+            });
+
+            res.render('pessoas/listagem', { pessoas, filtro: '' });
         } catch (erro) {
             res.render('erros/erro', { erro });
         }
@@ -23,14 +34,22 @@ const PessoasControlador = {
             } else {
                 pessoas = await Pessoa.buscarPorNome(filtro);
             }
-            res.render('pessoas/listagem', { pessoas });
+
+             // Formata a data para todas as buscas
+             pessoas.forEach(pessoa => {
+                pessoa.data_nascimento = formatarData(pessoa.data_nascimento);
+            });
+            
+            res.render('pessoas/listagem', { pessoas, filtro: filtro });
         } catch (erro) {
             res.render('erros/erro', { erro });
         }
     },
 
+    
     async exibirFormularioInclusao(req, res) {
-        res.render('pessoas/formulario', { pessoa: {}, acao: 'incluir' });
+        // Correção aqui: passar um objeto pessoa vazio
+        res.render('pessoas/formulario', { pessoa: {}, acao: 'incluir', erros: {} });
     },
 
     async incluir(req, res) {
@@ -42,7 +61,7 @@ const PessoasControlador = {
                 erros: errosVal.mapped()
             });
         }
-
+    
         try {
             const pessoa = req.body;
             await Pessoa.inserir(pessoa);
@@ -60,7 +79,7 @@ const PessoasControlador = {
             if (!pessoa) {
                 return res.render('erros/erro', { erro: { mensagem: 'Pessoa não encontrada.' } });
             }
-            res.render('pessoas/formulario', { pessoa, acao: 'editar' });
+            res.render('pessoas/formulario', { pessoa, acao: 'editar', erros: {} });
         } catch (erro) {
             res.render('erros/erro', { erro });
         }

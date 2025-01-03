@@ -65,9 +65,13 @@ const Pessoa = {
     },
 
     async inserir(pessoa) {
+
         const sql = `INSERT INTO pessoas (id, cpf, nome, situacao, data_nascimento)
                      VALUES (?, ?, ?, ?, ?)`;
         const id = uuidv4(); // Gera um UUID para a pessoa
+
+        console.log("UUID gerado:", id); // Verifique o UUID gerado
+
         const parametros = [
             id,
             pessoa.cpf,
@@ -75,10 +79,14 @@ const Pessoa = {
             pessoa.situacao,
             pessoa.data_nascimento
         ];
+
+        console.log('Executando query:', sql, parametros);
+
         try {
             await query(sql, parametros);
             return { id, ...pessoa };
         } catch (erro) {
+            console.error("Erro ao inserir pessoa:", erro); 
             throw erro;
         }
     },
