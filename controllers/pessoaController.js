@@ -24,15 +24,18 @@ class PessoaController {
 
   async incluirPessoa(req, res) {
 
+    // Remove a formatação do CPF antes das validações
+    const cpfSemFormatacao = req.body.cpf.replace(/\D/g, ''); // Remove tudo que não for dígito
+
     const pessoa = {
-      cpf: req.body.cpf,
+      cpf: cpfSemFormatacao,
       nome: req.body.nome,
       situacao: req.body.situacao,
       data_nascimento: req.body.data_nascimento,
-     // foto: req.file ? req.file.path : null
+      foto: req.file ? req.file.path : null
     };
 
-    // Validações
+    // Validações (ajustadas para usar o CPF sem formatação)
     const validacoes = [
       body('cpf').isLength({ min: 11, max: 11 }).withMessage('O CPF deve ter 11 caracteres')
         .custom((value) => /^[0-9]+$/.test(value)).withMessage('O CPF deve conter apenas números')
@@ -63,6 +66,8 @@ class PessoaController {
       if (req.file) {
         fs.unlinkSync(req.file.path);
       }
+      // Volta o CPF para o formato com máscara para mostrar o valor digitado pelo usuário
+      pessoa.cpf = cpfSemFormatacao; //req.body.cpf;
       return res.render('pessoa/incluirPessoa', { errors: errors.array(), pessoa, user: req.cookies.nome });
     }
 
@@ -98,15 +103,19 @@ class PessoaController {
 
   async atualizarPessoa(req, res) {
     const id = req.params.id;
-    const pessoa = {
-      cpf: req.body.cpf,
-      nome: req.body.nome,
-      situacao: req.body.situacao,
-      data_nascimento: req.body.data_nascimento,
-      foto: req.file ? req.file.path : null
-    };
+    
+     // Remove a formatação do CPF antes das validações
+     const cpfSemFormatacao = req.body.cpf.replace(/\D/g, '');
 
-    // Validações
+     const pessoa = {
+       cpf: cpfSemFormatacao, // Salva o CPF sem formatação
+       nome: req.body.nome,
+       situacao: req.body.situacao,
+       data_nascimento: req.body.data_nascimento,
+       foto: req.file ? req.file.path : null
+     };
+
+    // Validações (ajustadas para usar o CPF sem formatação)
     const validacoes = [
       body('cpf').isLength({ min: 11, max: 11 }).withMessage('O CPF deve ter 11 caracteres')
         .custom((value) => /^[0-9]+$/.test(value)).withMessage('O CPF deve conter apenas números')
@@ -137,6 +146,8 @@ class PessoaController {
       if (req.file) {
         fs.unlinkSync(req.file.path);
       }
+      // Volta o CPF para o formato com máscara para mostrar o valor digitado pelo usuário
+      pessoa.cpf = req.body.cpf;
       return res.render('pessoa/editarPessoa', { errors: errors.array(), pessoa, user: req.cookies.nome });
     }
 
