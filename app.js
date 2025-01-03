@@ -77,10 +77,11 @@ server.on('error', (error) => {
 });
 
 // Teste de conexão com o banco de dados
-conexao.connect((error) => {
+conexao.getConnection((error, connection) => {
   if (error) {
-    console.error('Erro ao conectar ao banco de dados:', error);
+    console.error('Erro ao obter conexão do pool:', error);
     return;
   }
   console.log('Conexão ao banco de dados estabelecida com sucesso!');
+  connection.release(); // Libera a conexão de volta para o pool
 });
