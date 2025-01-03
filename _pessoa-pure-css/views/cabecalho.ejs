@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Pessoa</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/purecss@3.0.0/build/pure-min.css">
+    <link rel="stylesheet" href="/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.1/dist/sweetalert2.all.min.js"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.1/dist/sweetalert2.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+</head>
+<body>
+
+    <div class="pure-menu pure-menu-horizontal">
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item pure-menu-selected"><a href="/" class="pure-menu-link">Home</a></li>
+            <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+                <a href="#" id="menu-pessoas" class="pure-menu-link">Pessoas</a>
+                <ul class="pure-menu-children">
+                    <li class="pure-menu-item"><a href="/pessoas" class="pure-menu-link">Pesquisar</a></li>
+                    <li class="pure-menu-item"><a href="/pessoas/incluir" class="pure-menu-link">Incluir</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <div class="container">
+        <script>
+            $(document).ready(function() {
+                // Exibe mensagens do req.flash() usando SweetAlert2
+                <% if (typeof req !== 'undefined' && req.flash) { %>
+                    <% let successMessage = req.flash('success'); %>
+                    <% if (successMessage && successMessage.length > 0) { %>
+                        // Usando a função do módulo Mensagens para formatar a mensagem
+                        <% let mensagemFormatada = Mensagens.formatarMensagemSucesso(successMessage); %>
+                        Swal.fire({
+                            icon: '<%- mensagemFormatada.tipo %>',
+                            title: '<%- mensagemFormatada.titulo %>',
+                            text: '<%- mensagemFormatada.mensagem %>',
+                            showConfirmButton: false,
+                            timer: 2500
+                        });
+                    <% } %>
+                <% } %>
+            });
+        </script>

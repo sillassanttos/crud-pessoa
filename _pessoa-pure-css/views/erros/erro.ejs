@@ -1,0 +1,38 @@
+<%- include('../cabecalho') %>
+
+<div class="pure-g">
+    <div class="pure-u-1">
+        <h2>Erro</h2>
+    </div>
+</div>
+
+<div class="pure-g">
+    <div class="pure-u-1">
+        <div class="error-message">
+            <h3>Ocorreu um erro:</h3>
+            <p><strong>Mensagem:</strong> <%= erro.mensagem %></p>
+            <% if (erro.erroCompleto) { %>
+                <p><strong>Detalhes:</strong></p>
+                <pre><%= JSON.stringify(erro.erroCompleto, null, 2) %></pre>
+            <% } %>
+            <a href="/pessoas" class="pure-button">Voltar para a listagem</a>
+        </div>
+    </div>
+</div>
+
+<style>
+    .error-message {
+        padding: 20px;
+        border: 1px solid #d9534f;
+        background-color: #f2dede;
+        color: #a94442;
+        border-radius: 4px;
+    }
+
+    .error-message pre {
+        white-space: pre-wrap;
+        word-wrap: break-word;
+    }
+</style>
+
+<%- include('../rodape') %>

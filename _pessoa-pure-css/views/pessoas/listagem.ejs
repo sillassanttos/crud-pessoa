@@ -1,0 +1,74 @@
+<%- include('../cabecalho') %>
+
+<div class="pure-g">
+    <div class="pure-u-1">
+        <h2>Listagem de Pessoas</h2>
+    </div>
+</div>
+
+<div class="pure-g">
+    <div class="pure-u-1">
+        <form class="pure-form" method="GET" action="/pessoas/filtrar">
+            <fieldset>
+                <input type="text" name="filtro" placeholder="Filtrar por CPF ou Nome" value="<%= filtro || '' %>">
+                <button type="submit" class="pure-button pure-button-primary">Pesquisar</button>
+            </fieldset>
+        </form>
+    </div>
+</div>
+
+<div class="pure-g">
+    <div class="pure-u-1">
+        <table class="pure-table pure-table-striped pure-table-horizontal">
+            <thead>
+                <tr>
+                    <th>CPF</th>
+                    <th>Nome</th>
+                    <th>Situação</th>
+                    <th>Data de Nascimento</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% pessoas.forEach(pessoa => { %>
+                    <tr>
+                        <td><%= pessoa.cpf %></td>
+                        <td><%= pessoa.nome %></td>
+                        <td><%= pessoa.situacao === 'A' ? 'Ativo' : 'Inativo' %></td>
+                        <td><%= pessoa.data_nascimento %></td>
+                        <td>
+                            <a href="/pessoas/editar/<%= pessoa.id %>" class="pure-button">Editar</a>
+                            <a href="#" class="pure-button button-error" onclick="excluirPessoa('<%= pessoa.id %>')">Excluir</a>
+                        </td>
+                    </tr>
+                <% }); %>
+                <% if (pessoas.length === 0) { %>
+                    <tr>
+                        <td colspan="5">Nenhuma pessoa encontrada.</td>
+                    </tr>
+                <% } %>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    function excluirPessoa(id) {
+        Swal.fire({
+            title: 'Tem certeza?',
+            text: "Você não poderá reverter isso!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Sim, excluir!',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                window.location.href = '/pessoas/excluir/' + id;
+            }
+        });
+    }
+</script>
+
+<%- include('../rodape') %>
