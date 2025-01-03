@@ -1,0 +1,212 @@
+<!-- Formulário de pesquisa -->
+<div class="pure-g">
+  <div class="pure-u-1">
+      <form class="pure-form" action="/pessoas" method="GET">
+          <div class="pure-g">
+              <div class="pure-u-1 pure-u-md-3-4">
+                  <input 
+                      type="text" 
+                      name="filtro" 
+                      value="<%= typeof filtro !== 'undefined' ? filtro : '' %>" 
+                      class="pure-input-1" 
+                      placeholder="Digite o nome ou CPF para pesquisar...">
+              </div>
+              <div class="pure-u-1 pure-u-md-1-4">
+                  <button type="submit" class="pure-button pure-button-primary">
+                      Pesquisar
+                  </button>
+              </div>
+          </div>
+      </form>
+  </div>
+</div>
+
+<!-- Tabela de resultados -->
+<div class="pure-g margem-superior">
+  <div class="pure-u-1">
+      <% if (typeof pessoas !== 'undefined' && pessoas.length > 0) { %>
+          <div class="tabela-responsiva">
+              <table class="pure-table pure-table-bordered pure-table-striped">
+                  <thead>
+                      <tr>
+                          <th>Nome</th>
+                          <th>CPF</th>
+                          <th>Data de Nascimento</th>
+                          <th>Situação</th>
+                          <th>Ações</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <% pessoas.forEach(function(pessoa) { %>
+                          <tr data-id="<%= pessoa.id %>">
+                              <td><%= pessoa.nome %></td>
+                              <td class="cpf">
+                                  <%= pessoa.cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4') %>
+                              </td>
+                              <td>
+                                  <%= new Date(pessoa.data_nascimento).toLocaleDateString('pt-BR') %>
+                              </td>
+                              <td>
+                                  <select 
+                                      class="pure-button situacao-select" 
+                                      data-id="<%= pessoa.id %>"
+                                      data-situacao-atual="<%= pessoa.situacao %>">
+                                      <option value="A" <%= pessoa.situacao === 'A' ? 'selected' : '' %>>
+                                          Ativo
+                                      </option>
+                                      <option value="I" <%= pessoa.situacao === 'I' ? 'selected' : '' %>>
+                                          Inativo
+                                      </option>
+                                  </select>
+                              </td>
+                              <td class="acoes">
+                                <div class="pure-button-group" role="group">
+                                    <a 
+                                        href="/pessoas/alterar/<%= pessoa.id %>" 
+                                        class="pure-button pure-button-primary btn-alterar" 
+                                        title="Alterar">
+                                        <i class="fa fa-edit"></i> Alterar
+                                    </a>
+                                    <button 
+                                        type="button"
+                                        class="pure-button pure-button-error btn-excluir" 
+                                        onclick="excluirPessoa('<%= pessoa.id %>')"
+                                        title="Excluir">
+                                        <i class="fa fa-trash"></i> Excluir
+                                    </button>
+                                </div>
+                            </td>
+                          </tr>
+                      <% }); %>
+                  </tbody>
+              </table>
+          </div>
+      <% } else { %>
+          <div class="mensagem-vazia">
+              <p>Nenhum registro encontrado.</p>
+          </div>
+      <% } %>
+  </div>
+</div>
+
+<!-- Scripts específicos da página -->
+<script>
+$(document).ready(function() {
+  // Alteração de situação
+  $('.situacao-select').change(function() {
+      const id = $(this).data('id');
+      const novaSituacao = $(this).val();
+      const situacaoAtual = $(this).data('situacao-atual');
+      
+      if (novaSituacao === situacaoAtual) return;
+
+      Swal.fire({
+          title: 'Confirmar alteração',
+          text: 'Deseja realmente alterar a situação desta pessoa?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Sim, alterar',
+          cancelButtonText: 'Cancelar'
+      }).then((result) => {
+          if (result.isConfirmed) {
+              $.post(`/pessoas/alterarSituacao/${id}`, { situacao: novaSituacao })
+                  .done(function(response) {
+                      Swal.fire({
+                          title: 'Sucesso',
+                          text: response.mensagem,
+                          icon: 'success'
+                      }).then(() => {
+                          $(this).data('situacao-atual', novaSituacao);
+                      });
+                  })
+                  .fail(function() {
+                      $(this).val(situacaoAtual);
+                  });
+          } else {
+              $(this).val(situacaoAtual);
+          }
+      });
+  });
+
+  // Exclusão de registro
+  $('.btn-excluir').click(function() {
+      const id = $(this).data('id');
+      const linha = $(this).closest('tr');
+
+      Swal.fire({
+          title: 'Confirmar exclusão',
+          text: 'Esta ação não poderá ser desfeita. Deseja continuar?',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonText: 'Sim, excluir',
+          cancelButtonText: 'Cancelar'
+      }).then((result) => {
+          if (result.isConfirmed) {
+              $.post(`/pessoas/excluir/${id}`)
+                  .done(function(response) {
+                      linha.fadeOut(400, function() {
+                          $(this).remove();
+                          if ($('tbody tr').length === 0) {
+                              location.reload();
+                          }
+                      });
+
+                      Swal.fire({
+                          title: 'Sucesso',
+                          text: response.mensagem,
+                          icon: 'success'
+                      });
+                  });
+          }
+      });
+  });
+});
+</script>
+<script>
+    function excluirPessoa(id) {
+        Swal.fire({
+            title: 'Confirmar exclusão',
+            text: 'Esta ação não poderá ser desfeita. Deseja continuar?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#ca3c3c',
+            confirmButtonText: 'Sim, excluir',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: `/pessoas/excluir/${id}`,
+                    method: 'POST',
+                    success: function(response) {
+                        const linha = $(`button[onclick="excluirPessoa('${id}')"]`).closest('tr');
+                        
+                        linha.fadeOut(400, function() {
+                            $(this).remove();
+                            
+                            if ($('tbody tr').length === 0) {
+                                location.reload();
+                                return;
+                            }
+                            
+                            Swal.fire({
+                                title: 'Sucesso',
+                                text: 'Registro excluído com sucesso',
+                                icon: 'success',
+                                timer: 1500,
+                                showConfirmButton: false
+                            });
+                        });
+                    },
+                    error: function(xhr, status, error) {
+                        Swal.fire({
+                            title: 'Erro',
+                            text: 'Ocorreu um erro ao excluir o registro',
+                            icon: 'error'
+                        });
+                        console.error('Erro na exclusão:', error);
+                    }
+                });
+            }
+        });
+    }
+    </script>

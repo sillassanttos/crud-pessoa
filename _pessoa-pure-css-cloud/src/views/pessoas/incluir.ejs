@@ -1,0 +1,150 @@
+<div class="pure-g">
+  <div class="pure-u-1">
+      <form class="pure-form pure-form-stacked" action="/pessoas/incluir" method="POST" id="formIncluir">
+          <div class="pure-g">
+              <!-- Campo CPF -->
+              <div class="pure-u-1 pure-u-md-1-2 campo-form">
+                  <label for="cpf">CPF *</label>
+                  <input 
+                      type="text" 
+                      id="cpf" 
+                      name="cpf" 
+                      class="pure-input-1 cpf-mask" 
+                      value="<%= pessoa.cpf || '' %>" 
+                      required>
+                  <span class="pure-form-message">Digite apenas números</span>
+              </div>
+
+              <!-- Campo Nome -->
+              <div class="pure-u-1 pure-u-md-1-2 campo-form">
+                  <label for="nome">Nome Completo *</label>
+                  <input 
+                      type="text" 
+                      id="nome" 
+                      name="nome" 
+                      class="pure-input-1" 
+                      value="<%= pessoa.nome || '' %>" 
+                      maxlength="60"
+                      required>
+                  <span class="pure-form-message">Máximo de 60 caracteres</span>
+              </div>
+
+              <!-- Campo Data de Nascimento -->
+              <div class="pure-u-1 pure-u-md-1-2 campo-form">
+                  <label for="data_nascimento">Data de Nascimento *</label>
+                  <input 
+                      type="date" 
+                      id="data_nascimento" 
+                      name="data_nascimento" 
+                      class="pure-input-1" 
+                      value="<%= pessoa.data_nascimento || '' %>" 
+                      max="<%= new Date().toISOString().split('T')[0] %>"
+                      required>
+                  <span class="pure-form-message">Não pode ser data futura</span>
+              </div>
+
+              <!-- Campo Situação -->
+              <div class="pure-u-1 pure-u-md-1-2 campo-form">
+                  <label for="situacao">Situação *</label>
+                  <select 
+                      id="situacao" 
+                      name="situacao" 
+                      class="pure-input-1" 
+                      required>
+                      <option value="A" <%= (pessoa.situacao || 'A') === 'A' ? 'selected' : '' %>>Ativo</option>
+                      <option value="I" <%= pessoa.situacao === 'I' ? 'selected' : '' %>>Inativo</option>
+                  </select>
+              </div>
+
+              <!-- Botões do formulário -->
+              <div class="pure-u-1 campo-form">
+                  <div class="pure-button-group" role="group">
+                      <button type="submit" class="pure-button pure-button-primary">
+                          <i class="fa fa-save"></i> Salvar
+                      </button>
+                      <a href="/pessoas" class="pure-button">
+                          <i class="fa fa-times"></i> Cancelar
+                      </a>
+                  </div>
+              </div>
+          </div>
+      </form>
+  </div>
+</div>
+
+<!-- Scripts específicos da página -->
+<script>
+$(document).ready(function() {
+  const form = $('#formIncluir');
+
+  // Validação do formulário
+  form.on('submit', function(e) {
+      e.preventDefault();
+      
+      // Validação do CPF
+      const cpf = $('#cpf').val().replace(/\D/g, '');
+      if (cpf.length !== 11) {
+          Swal.fire({
+              title: 'Erro de validação',
+              text: 'CPF deve conter 11 dígitos',
+              icon: 'error'
+          });
+          return false;
+      }
+
+      // Validação do nome
+      const nome = $('#nome').val().trim();
+      if (nome.length < 3 || nome.length > 60) {
+          Swal.fire({
+              title: 'Erro de validação',
+              text: 'Nome deve ter entre 3 e 60 caracteres',
+              icon: 'error'
+          });
+          return false;
+      }
+
+      // Validação da data de nascimento
+      const dataNascimento = new Date($('#data_nascimento').val());
+      if (dataNascimento > new Date()) {
+          Swal.fire({
+              title: 'Erro de validação',
+              text: 'Data de nascimento não pode ser futura',
+              icon: 'error'
+          });
+          return false;
+      }
+
+      // Envio do formulário via AJAX
+      $.ajax({
+          url: form.attr('action'),
+          method: 'POST',
+          data: form.serialize(),
+          success: function(response) {
+              Swal.fire({
+                  title: 'Sucesso',
+                  text: 'Pessoa cadastrada com sucesso',
+                  icon: 'success',
+                  confirmButtonText: 'OK'
+              }).then(() => {
+                  window.location.href = '/pessoas';
+              });
+          }
+      });
+  });
+
+  // Formatação e validação do CPF em tempo real
+  $('#cpf').on('input', function() {
+      let valor = $(this).val().replace(/\D/g, '');
+      if (valor.length > 11) {
+          valor = valor.substr(0, 11);
+      }
+      $(this).val(valor.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4'));
+  });
+
+  // Validação do nome em tempo real
+  $('#nome').on('input', function() {
+      let valor = $(this).val().replace(/[^A-Za-zÀ-ÖØ-öø-ÿ\s]/g, '');
+      $(this).val(valor);
+  });
+});
+</script>

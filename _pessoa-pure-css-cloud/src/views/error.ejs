@@ -1,0 +1,159 @@
+<div class="pure-g">
+  <div class="pure-u-1">
+      <div class="erro-container">
+          <div class="erro-cabecalho">
+              <h2>
+                  <i class="fa fa-exclamation-triangle"></i>
+                  <%= erro.mensagem || 'Ocorreu um erro inesperado' %>
+              </h2>
+          </div>
+
+          <div class="erro-detalhes">
+              <% if (erro.status) { %>
+                  <div class="erro-item">
+                      <strong>Status:</strong> <%= erro.status %>
+                  </div>
+              <% } %>
+
+              <% if (erro.stack) { %>
+                  <div class="erro-item">
+                      <strong>Detalhes técnicos:</strong>
+                      <pre class="erro-stack"><%= erro.stack %></pre>
+                  </div>
+              <% } %>
+
+              <% if (erro.sqlMessage) { %>
+                  <div class="erro-item">
+                      <strong>Erro do banco de dados:</strong>
+                      <pre class="erro-sql"><%= erro.sqlMessage %></pre>
+                  </div>
+              <% } %>
+
+              <% if (erro.detalhes) { %>
+                  <div class="erro-item">
+                      <strong>Informações adicionais:</strong>
+                      <pre class="erro-detalhes-tecnicos">
+                          <%= typeof erro.detalhes === 'string' ? erro.detalhes : JSON.stringify(erro.detalhes, null, 2) %>
+                      </pre>
+                  </div>
+              <% } %>
+          </div>
+
+          <div class="erro-acoes">
+              <button onclick="window.history.back()" class="pure-button">
+                  <i class="fa fa-arrow-left"></i> Voltar
+              </button>
+              <a href="/" class="pure-button pure-button-primary">
+                  <i class="fa fa-home"></i> Ir para o Dashboard
+              </a>
+          </div>
+      </div>
+  </div>
+</div>
+
+<style>
+.erro-container {
+  background-color: white;
+  border-radius: var(--borda-raio);
+  box-shadow: var(--sombra-padrao);
+  margin: 2rem auto;
+  max-width: 800px;
+  padding: 2rem;
+}
+
+.erro-cabecalho {
+  border-bottom: 2px solid var(--cor-erro);
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+}
+
+.erro-cabecalho h2 {
+  color: var(--cor-erro);
+  margin: 0;
+}
+
+.erro-cabecalho i {
+  margin-right: 0.5rem;
+}
+
+.erro-detalhes {
+  background-color: #f8f9fa;
+  border-radius: var(--borda-raio);
+  margin: 1rem 0;
+  padding: 1rem;
+}
+
+.erro-item {
+  margin-bottom: 1rem;
+}
+
+.erro-item:last-child {
+  margin-bottom: 0;
+}
+
+.erro-stack,
+.erro-sql,
+.erro-detalhes-tecnicos {
+  background-color: #2d3e50;
+  border-radius: var(--borda-raio);
+  color: #fff;
+  font-family: monospace;
+  margin: 0.5rem 0;
+  max-height: 200px;
+  overflow-x: auto;
+  padding: 1rem;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.erro-acoes {
+  border-top: 1px solid var(--cor-borda);
+  margin-top: 1.5rem;
+  padding-top: 1.5rem;
+  text-align: center;
+}
+
+.erro-acoes .pure-button {
+  margin: 0 0.5rem;
+}
+
+@media screen and (max-width: 48em) {
+  .erro-container {
+      margin: 1rem;
+      padding: 1rem;
+  }
+
+  .erro-acoes .pure-button {
+      display: block;
+      margin: 0.5rem auto;
+      width: 100%;
+  }
+}
+</style>
+
+<script>
+$(document).ready(function() {
+  // Limita a altura das seções de detalhes técnicos e adiciona um botão "Ver mais"
+  $('.erro-stack, .erro-sql, .erro-detalhes-tecnicos').each(function() {
+      const elemento = $(this);
+      if (elemento.height() >= 200) {
+          const botaoExpandir = $('<button>')
+              .addClass('pure-button pure-button-secondary')
+              .text('Ver mais detalhes')
+              .css('marginTop', '0.5rem')
+              .click(function() {
+                  if (elemento.hasClass('expandido')) {
+                      elemento.css('maxHeight', '200px');
+                      $(this).text('Ver mais detalhes');
+                  } else {
+                      elemento.css('maxHeight', 'none');
+                      $(this).text('Ver menos');
+                  }
+                  elemento.toggleClass('expandido');
+              });
+          
+          elemento.after(botaoExpandir);
+      }
+  });
+});
+</script>

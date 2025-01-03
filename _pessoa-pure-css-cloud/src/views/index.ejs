@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= titulo %> - <%= pagina %></title>
+    
+    <!-- Pure.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/3.0.0/pure-min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/3.0.0/grids-responsive-min.css">
+    
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.1/sweetalert2.min.css">
+    
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="/css/estilo.css">
+</head>
+<body>
+    <!-- Menu superior -->
+    <div class="pure-menu pure-menu-horizontal pure-menu-fixed">
+        <a href="/" class="pure-menu-heading pure-menu-link"><%= titulo %></a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+                <a href="#" class="pure-menu-link">Pessoa</a>
+                <ul class="pure-menu-children">
+                    <li class="pure-menu-item">
+                        <a href="/pessoas" class="pure-menu-link">Pesquisar</a>
+                    </li>
+                    <li class="pure-menu-item">
+                        <a href="/pessoas/incluir" class="pure-menu-link">Incluir</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Conteúdo principal -->
+    <div class="conteudo">
+        <div class="pure-g">
+            <div class="pure-u-1">
+                <div class="dashboard-container">
+                    <h1>Bem-vindo ao Sistema de Cadastro de Pessoas</h1>
+                    <p>Utilize o menu superior para navegar entre as funcionalidades do sistema.</p>
+                    
+                    <div class="pure-g dashboard-cards">
+                        <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+                            <div class="card">
+                                <h3>Pesquisar Pessoas</h3>
+                                <p>Consulte, altere ou exclua registros de pessoas cadastradas no sistema.</p>
+                                <a href="/pessoas" class="pure-button pure-button-primary">Acessar</a>
+                            </div>
+                        </div>
+                        
+                        <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+                            <div class="card">
+                                <h3>Incluir Pessoa</h3>
+                                <p>Cadastre uma nova pessoa no sistema com seus dados completos.</p>
+                                <a href="/pessoas/incluir" class="pure-button pure-button-primary">Acessar</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+        <div class="pure-g">
+            <div class="pure-u-1">
+                <p>&copy; <%= new Date().getFullYear() %> - <%= titulo %> - Versão <%= versao %></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.1/sweetalert2.min.js"></script>
+    <script src="/js/script.js"></script>
+</body>
+</html>

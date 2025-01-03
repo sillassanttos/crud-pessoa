@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= titulo %> - <%= pagina %></title>
+    
+    <!-- Pure.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/3.0.0/pure-min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pure/3.0.0/grids-responsive-min.css">
+    
+    <!-- SweetAlert2 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.1/sweetalert2.min.css">
+    
+    <!-- jQuery Mask Plugin -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.css">
+    
+    <!-- Estilos personalizados -->
+    <link rel="stylesheet" href="/css/estilo.css">
+</head>
+<body>
+    <!-- Menu superior -->
+    <div class="pure-menu pure-menu-horizontal pure-menu-fixed">
+        <a href="/" class="pure-menu-heading pure-menu-link"><%= titulo %></a>
+        <ul class="pure-menu-list">
+            <li class="pure-menu-item pure-menu-has-children pure-menu-allow-hover">
+                <a href="#" class="pure-menu-link">Pessoa</a>
+                <ul class="pure-menu-children">
+                    <li class="pure-menu-item">
+                        <a href="/pessoas" class="pure-menu-link">Pesquisar</a>
+                    </li>
+                    <li class="pure-menu-item">
+                        <a href="/pessoas/incluir" class="pure-menu-link">Incluir</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Conteúdo principal -->
+    <div class="conteudo">
+        <div class="pure-g">
+            <div class="pure-u-1">
+                <div class="container">
+                    <h1><%= pagina %></h1>
+                    
+                    <!-- Área para mensagens de erro -->
+                    <% if (typeof erros !== 'undefined' && erros.length > 0) { %>
+                        <div class="mensagens-erro">
+                            <% erros.forEach(function(erro) { %>
+                                <div class="erro-item">
+                                    <%= erro.msg || erro.message %>
+                                </div>
+                            <% }); %>
+                        </div>
+                    <% } %>
+                    
+                    <!-- Carrega o conteúdo específico da página -->
+                    <%- include('../' + conteudo) %>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rodapé -->
+    <footer class="footer">
+        <div class="pure-g">
+            <div class="pure-u-1">
+                <p>&copy; <%= new Date().getFullYear() %> - <%= titulo %> - Versão <%= versao %></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert2/11.10.1/sweetalert2.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.mask/1.14.16/jquery.mask.min.js"></script>
+    <script src="/js/script.js"></script>
+    
+    <!-- Inicialização de máscaras -->
+    <script>
+        $(document).ready(function() {
+            $('.cpf-mask').mask('000.000.000-00');
+            $('.data-mask').mask('0000-00-00');
+            
+            // Tratamento global de erros Ajax
+            $(document).ajaxError(function(event, jqXHR, settings, error) {
+                const mensagem = jqXHR.responseJSON?.mensagem || 'Ocorreu um erro ao processar a requisição';
+                const detalhes = jqXHR.responseJSON?.erro?.detalhes || error;
+                
+                Swal.fire({
+                    title: 'Erro',
+                    html: `${mensagem}<br><small>${JSON.stringify(detalhes)}</small>`,
+                    icon: 'error'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
