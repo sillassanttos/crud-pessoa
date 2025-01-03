@@ -1,0 +1,42 @@
+<%- include('../partials/header', { title: 'Dashboard' }) %>
+
+<div class="container mt-4">
+  <h1 class="display-4 text-center mb-4">
+    <i class="fas fa-tachometer-alt"></i> Dashboard
+  </h1>
+
+  <div class="row">
+    <div class="col-md-6 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="fas fa-users"></i> Pessoas
+          </h5>
+          <p class="card-text">Gerenciar cadastros de pessoas.</p>
+          <a href="/pessoa/pesquisar" class="btn btn-primary btn-block">
+            <i class="fas fa-search"></i> Pesquisar Pessoas
+          </a>
+          <a href="/pessoa/incluir" class="btn btn-success btn-block mt-2">
+            <i class="fas fa-user-plus"></i> Incluir Pessoa
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6 mb-3">
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="fas fa-chart-line"></i> Outras Funcionalidades
+          </h5>
+          <p class="card-text">Em breve, novas funcionalidades aqui.</p>
+          <a href="#" class="btn btn-secondary btn-block disabled">
+            <i class="fas fa-question-circle"></i> Em construção
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

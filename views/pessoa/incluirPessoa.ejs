@@ -1,0 +1,67 @@
+<%- include('../partials/header', { title: 'Incluir Pessoa' }) %>
+
+<div class="container mt-4">
+  <h1 class="display-4 text-center mb-4">
+    <i class="fas fa-user-plus"></i> Incluir Pessoa
+  </h1>
+
+  <form action="/pessoa/incluir" method="POST" enctype="multipart/form-data">
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="cpf">CPF:</label>
+          <input type="text" class="form-control" id="cpf" name="cpf" value="<%= pessoa.cpf %>" required minlength="11" maxlength="11">
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="nome">Nome:</label>
+          <input type="text" class="form-control" id="nome" name="nome" value="<%= pessoa.nome %>" required minlength="3" maxlength="60">
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="situacao">Situação:</label>
+          <select class="form-control" id="situacao" name="situacao" required>
+            <option value="A" <%= pessoa.situacao === 'A' ? 'selected' : '' %>>Ativo</option>
+            <option value="I" <%= pessoa.situacao === 'I' ? 'selected' : '' %>>Inativo</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-group">
+          <label for="data_nascimento">Data de Nascimento:</label>
+          <input type="date" class="form-control" id="data_nascimento" name="data_nascimento" value="<%= pessoa.data_nascimento %>" required>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-12">
+        <div class="form-group">
+          <label for="foto">Foto:</label>
+          <input type="file" class="form-control-file" id="foto" name="foto">
+        </div>
+      </div>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">
+      <i class="fas fa-save"></i> Salvar
+    </button>
+    <a href="/pessoa/pesquisar" class="btn btn-secondary mt-3">
+      <i class="fas fa-times-circle"></i> Cancelar
+    </a>
+  </form>
+
+  <% if (errors && errors.length > 0) { %>
+    <div class="alert alert-danger mt-4">
+      <ul>
+        <% errors.forEach(error => { %>
+          <li><%= error.msg %></li>
+        <% }); %>
+      </ul>
+    </div>
+  <% } %>
+</div>
+
+<%- include('../partials/footer') %>

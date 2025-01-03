@@ -1,0 +1,20 @@
+<%- include('../partials/header', { title: 'Erro' }) %>
+
+<div class="container mt-4">
+  <div class="alert alert-danger" role="alert">
+    <h4 class="alert-heading">
+      <i class="fas fa-exclamation-triangle"></i> Ocorreu um erro!
+    </h4>
+    <p><%= error %></p>
+    <% if (details) { %>
+      <hr>
+      <p class="mb-0">Detalhes: <%= details %></p>
+    <% } %>
+  </div>
+
+  <a href="/" class="btn btn-primary">
+    <i class="fas fa-home"></i> Voltar para a página inicial
+  </a>
+</div>
+
+<%- include('../partials/footer') %>

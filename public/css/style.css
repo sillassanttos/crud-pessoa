@@ -1,0 +1,22 @@
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
+}
+
+.footer {
+  margin-top: auto;
+}
+
+/* Estilos para a tabela de pesquisa */
+.table th[data-column] {
+  cursor: pointer;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+}
+
+.table th[data-column] i {
+  margin-left: 5px;
+}
