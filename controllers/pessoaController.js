@@ -23,12 +23,13 @@ class PessoaController {
   }
 
   async incluirPessoa(req, res) {
+
     const pessoa = {
       cpf: req.body.cpf,
       nome: req.body.nome,
       situacao: req.body.situacao,
       data_nascimento: req.body.data_nascimento,
-      foto: req.file ? req.file.path : null
+     // foto: req.file ? req.file.path : null
     };
 
     // Validações
@@ -86,6 +87,10 @@ class PessoaController {
       } else if (!pessoa) {
         res.status(404).render('error/erro', { error: 'Pessoa não encontrada', details: '', user: req.cookies.nome });
       } else {
+        // Modifica o caminho da foto para a rota estática
+        if (pessoa.foto) {
+          pessoa.foto = pessoa.foto.replace('uploads', '/uploads'); 
+        }
         res.render('pessoa/editarPessoa', { errors: [], pessoa, user: req.cookies.nome });
       }
     });

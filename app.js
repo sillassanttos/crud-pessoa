@@ -2,8 +2,10 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const path = require('path');
+const fs = require('fs'); // Módulo File System já importado anteriormente
 const pessoaRoutes = require('./routes/pessoaRoutes');
 const conexao = require('./data/conexao');
+const multer = require('multer'); // Import multer
 
 const app = express();
 const port = 3000;
@@ -19,9 +21,28 @@ app.use(bodyParser.json());
 // Configuração do Cookie Parser
 app.use(cookieParser());
 
+// Cria o diretório 'uploads' se não existir (FORA da pasta public)
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir);
+}
+
+// Configuração do Multer
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, uploadDir); // Salva os arquivos na pasta 'uploads' fora da pasta 'public'
+  },
+  filename: function (req, file, cb) {
+    cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname));
+  }
+});
+
+const upload = multer({ storage: storage });
+
 // Configuração de arquivos estáticos
 app.use(express.static(path.join(__dirname, 'public')));
-app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
+// Configuração da rota estática para servir arquivos de upload
+app.use('/uploads', express.static(uploadDir));
 app.use('/css', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/css')));
 app.use('/js', express.static(path.join(__dirname, 'node_modules/bootstrap/dist/js')));
 app.use('/js', express.static(path.join(__dirname, 'node_modules/jquery/dist')));
@@ -32,7 +53,6 @@ app.use((err, req, res, next) => {
   console.error(err.stack);
 
   // Gravar log de erro
-  const fs = require('fs');
   const errorLogStream = fs.createWriteStream(path.join(__dirname, 'logs', 'error.log'), { flags: 'a' });
   errorLogStream.write(`${new Date().toISOString()} - ${err.stack}\n`);
   errorLogStream.end();
@@ -76,7 +96,7 @@ server.on('error', (error) => {
   }
 });
 
-// Teste de conexão com o banco de dados
+// Teste de conexão com o banco de dados (CORRIGIDO)
 conexao.getConnection((error, connection) => {
   if (error) {
     console.error('Erro ao obter conexão do pool:', error);
